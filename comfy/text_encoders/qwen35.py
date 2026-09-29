@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 import os
 
 import comfy.model_management
+import comfy.ops
 from comfy.ldm.modules.attention import optimized_attention_for_device
 from comfy import sd1_clip
 import comfy.text_encoders.qwen_vl
@@ -447,6 +448,12 @@ class Qwen35VisionPatchEmbed(nn.Module):
 
     def forward(self, x):
         x = x.view(-1, self.in_channels, self.temporal_patch_size, self.patch_size, self.patch_size)
+        if comfy.model_management.is_amd() and x.is_cuda:
+            # ROCm workaround:
+            # this Conv3d covers the whole patch and is equivalent to a Linear projection.
+            # Avoid the ROCm Conv3d kernel which can segfault on AMD GPUs.
+            with comfy.ops.CastBiasWeightContext(self.proj, x, offloadable=True) as (weight, bias):
+                return F.linear(x.flatten(1), weight.flatten(1), bias)
         return self.proj(x).view(-1, self.embed_dim)
 
 
@@ -601,8 +608,10 @@ class Qwen35VisionModel(nn.Module):
         weight_list = [[] for _ in range(4)]
         for t, h, w in grid_thw_list:
             h, w = int(h), int(w)
-            h_idxs = torch.linspace(0, self.num_grid_per_side - 1, h, device=device)
-            w_idxs = torch.linspace(0, self.num_grid_per_side - 1, w, device=device)
+            # ROCm workaround: compute interpolation coordinates on CPU.
+            # Avoids torch.linspace GPU segfault on some AMD GPUs.
+            h_idxs = torch.linspace(0, self.num_grid_per_side - 1, h)
+            w_idxs = torch.linspace(0, self.num_grid_per_side - 1, w)
             h_idxs_floor = h_idxs.int()
             w_idxs_floor = w_idxs.int()
             h_idxs_ceil = (h_idxs.int() + 1).clip(max=self.num_grid_per_side - 1)
