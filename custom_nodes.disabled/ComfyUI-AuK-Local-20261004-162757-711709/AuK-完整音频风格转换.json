@@ -1,0 +1,207 @@
+{
+  "last_node_id": 4,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadAudio",
+      "pos": [
+        40,
+        100
+      ],
+      "size": [
+        340,
+        180
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "widget": {
+            "name": "audio"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            1,
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "auk_小曾.wav"
+      ],
+      "title": "加载完整原音"
+    },
+    {
+      "id": 2,
+      "type": "PreviewAudio",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        340,
+        130
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [],
+      "title": "试听原音"
+    },
+    {
+      "id": 3,
+      "type": "AuKVoiceEditLocal",
+      "pos": [
+        460,
+        100
+      ],
+      "size": [
+        560,
+        390
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "run_info",
+          "type": "STRING",
+          "links": null,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AuKVoiceEditLocal"
+      },
+      "widgets_values": [
+        "保持说话内容不变，将声音改为十六岁少女：音色清新甜亮，发声清脆轻盈，带着笑意说话，语气活泼俏皮，带一点自然的嗲感和撒娇感。部分句尾的元音轻轻拖长，尾音柔和上扬，像亲昵地向熟悉的人撒娇。整体节奏轻快，吐字清晰，拖尾轻微自然。",
+        64,
+        2.0,
+        42,
+        "fixed"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "SaveAudio",
+      "pos": [
+        1120,
+        120
+      ],
+      "size": [
+        360,
+        150
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "auk/voice-edit"
+      ],
+      "title": "保存并试听转换结果"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "AUDIO"
+    ],
+    [
+      2,
+      1,
+      0,
+      3,
+      0,
+      "AUDIO"
+    ],
+    [
+      3,
+      3,
+      0,
+      4,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.85,
+      "offset": [
+        50,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}
